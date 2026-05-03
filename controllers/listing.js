@@ -14,11 +14,19 @@ module.exports.createListing=async(req,res,next)=>{
         if(!req.body.listing){
             throw new ExpressError(400,"Send valid Data for Listing");
         }
-        req.flash("success","New Listing Created!");
-        let listing=req.body.listing;
-        let newListing=new Listing(listing);
+
+        let newListing = new Listing(req.body.listing);
+
+        if (req.file) {
+        newListing.image = {
+            url: req.file.path,
+            filename: req.file.filename
+        };
+    }
+
         newListing.owner=req.user._id;
         await newListing.save();
+        req.flash("success","New Listing Created!");
         res.redirect("/listings");
     }
 
