@@ -28,7 +28,8 @@ const userRouter = require("./routes/user.js");
 
 const { required } = require("joi");
 
-const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
+//const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
+const MONGO_URL=process.env.MONGO_ATLAS_URL;
 
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 app.engine('ejs',  ejsMate);
@@ -61,9 +62,9 @@ async function main() {
   await mongoose.connect(MONGO_URL);
 } 
 
-app.get("/",(req,res)=>{
-    res.send("Working....");
-})
+// app.get("/",(req,res)=>{
+//     res.send("Working....");
+// })
 
 app.use(session(sessionOptions));
 app.use(flash());
