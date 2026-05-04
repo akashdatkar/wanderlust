@@ -37,7 +37,7 @@ router.get("/:id", wrapAsync(showListing));
 router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(editListing));
 
 //update listing
-router.put("/:id",validatelisting,isLoggedIn,isOwner, wrapAsync(updateListing));
+router.put("/:id",isLoggedIn,isOwner, upload.single('listing[image]'),validatelisting,wrapAsync(updateListing));
 
 //delete listing
 router.delete("/:id",isLoggedIn,isOwner,wrapAsync(destroyListing));
