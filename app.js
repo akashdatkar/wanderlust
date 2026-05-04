@@ -16,6 +16,7 @@ const ExpressError=require("./utility/ExpressError.js");
 const {listingSchema, reviewSchema}=require("./schema.js");
 const Review=require("./models/reviews.js");
 const session=require("express-session");
+const MongoStore = require("connect-mongo").default;
 const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy = require("passport-local").Strategy;
@@ -29,7 +30,7 @@ const userRouter = require("./routes/user.js");
 const { required } = require("joi");
 
 //const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
-const MONGO_URL=process.env.MONGO_ATLAS_URL;
+const MONGO_URL= process.env.MONGO_ATLAS_URL;
 
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 app.engine('ejs',  ejsMate);
@@ -41,8 +42,21 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname,"views"));
 app.use(express.static(path.join(__dirname,"public")));
 
+const store= MongoStore.create({
+    mongoUrl:MONGO_URL,
+    crypto:{
+     secret:process.env.SECRET,
+    },
+    touchAfter: 24 * 60 * 60,
+})
+
+store.on("error",()=>{
+    console.log("Error in mongo session store, err");
+})
+
 const sessionOptions={
-    secret:"mysupersecretcode",
+    store:store,
+    secret:process.env.SECRET,
     resave:false,
     saveUninitialize:true,
     cookie:{
