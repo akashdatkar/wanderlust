@@ -4,7 +4,7 @@ const wrapAsync=require("../utility/wrapAsync.js");
 const ExpressError=require("../utility/ExpressError.js");
 const {listingSchema}=require("../schema.js");
 const Listing=require("../models/listing.js");
-const {isLoggedIn, isOwner,validatelisting}=require("../middleware.js");
+const {isLoggedIn, isOwner,validatelisting}=require("../authMiddleware.js");
 
 const { index, renderNewForm, showListing, createListing, editListing, updateListing, destroyListing } = require("../controllers/listing.js");
 const multer  = require("multer");

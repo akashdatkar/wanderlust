@@ -4,7 +4,6 @@ if(process.env.NODE_ENV !="production"){
 
 const express=require("express");
 const app=express();
-let port=8080;
 const path=require("path");
 const mongoose = require('mongoose');
 const Listing=require("./models/listing.js");
@@ -31,6 +30,7 @@ const { required } = require("joi");
 
 // Use Atlas if provided, otherwise fall back to local MongoDB for development
 const MONGO_URL = process.env.MONGO_ATLAS_URL || 'mongodb://127.0.0.1:27017/wanderlust';
+const port = process.env.PORT || 8080;
 
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 app.engine('ejs',  ejsMate);
@@ -129,9 +129,13 @@ app.use((err,req,res,next)=>{
 //     res.send("Something went wrong..");
 // })
 
-app.listen(port,()=>{
-    console.log(`Server Started on ${port}`);
-})
+if (require.main === module) {
+    app.listen(port,()=>{
+        console.log(`Server Started on ${port}`);
+    })
+}
+
+module.exports = app;
 
 
 
