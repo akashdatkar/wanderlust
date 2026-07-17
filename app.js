@@ -29,8 +29,8 @@ const userRouter = require("./routes/user.js");
 
 const { required } = require("joi");
 
-//const MONGO_URL='mongodb://127.0.0.1:27017/wanderlust';
-const MONGO_URL= process.env.MONGO_ATLAS_URL;
+// Use Atlas if provided, otherwise fall back to local MongoDB for development
+const MONGO_URL = process.env.MONGO_ATLAS_URL || 'mongodb://127.0.0.1:27017/wanderlust';
 
 //uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 app.engine('ejs',  ejsMate);
@@ -50,19 +50,19 @@ const store= MongoStore.create({
     touchAfter: 24 * 60 * 60,
 })
 
-store.on("error",()=>{
-    console.log("Error in mongo session store, err");
-})
+store.on("error", (e) => {
+    console.log("Error in mongo session store", e);
+});
 
 const sessionOptions={
     store:store,
     secret:process.env.SECRET,
     resave:false,
-    saveUninitialize:true,
+    saveUninitialized:true,
     cookie:{
-        expires:Date.now()+7*24*60*60*1000,
+        expires: new Date(Date.now()+7*24*60*60*1000),
         maxAge:7*24*60*60*1000,
-        httponly:true,
+        httpOnly:true,
     },
 };
 
