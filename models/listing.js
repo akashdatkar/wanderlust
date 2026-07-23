@@ -19,12 +19,15 @@ const newSchema=new mongoose.Schema({
     price:Number,
     location:String,
     country:String,
-    reviews:[
-        {
-            type:mongoose.Schema.Types.ObjectId, 
-            ref:"Reviews",
-        },      
-    ],
+    reviews:{
+        type:[
+            {
+                type:mongoose.Schema.Types.ObjectId, 
+                ref:"Reviews",
+            },
+        ],
+        default: [],
+    },
     owner:{
         type:mongoose.Schema.Types.ObjectId, 
         ref:"Users",

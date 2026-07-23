@@ -1,14 +1,16 @@
 <% layout("/layouts/boilerplate") %>
+<% const ownerName = listing.owner && listing.owner.username ? listing.owner.username : "Unknown"; %>
+<% const imageUrl = listing.image && listing.image.url ? listing.image.url : "https://images.unsplash.com/photo-1775641987684-afe489a18949?w=500&auto=format&fit=crop&q=60"; %>
 <body>
 <div class="row mt-3">
     <div class="col-8 offset-3">
     <h1><%= listing.title %></h1>
     </div>
     <div class="card col-6 offset-3 show-card listing-card">
-        <img src="<%= listing.image.url%>" class="card-img-top show-img" alt="Loading..">
+        <img src="<%= imageUrl %>" class="card-img-top show-img" alt="Loading..">
         <div class="card-body">
             <p class="card-text">
-                Owned By: <i><%= listing.owner.username %></i><br>
+                Owned By: <i><%= ownerName %></i><br>
                 <%= listing.description %> <br>
                 &#8377 <%= listing.price.toLocaleString("en-IN") %> <br>
                 <%= listing.location %> <br>
@@ -67,18 +69,22 @@
         <% } %>
         <p><b>All Reviews:</b></p>
     <div class="row">
-        <% for(review of listing.reviews){ %>
-        <div class="card col-5 mb-3 ms-2">
-            <div class="card-body">
-                <h6 class="card-title">@<%= review.auther.username %></h6>
-                <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-                <p class="card-text"><%= review.comment %></p>
-            </div>
+        <% if(listing.reviews && listing.reviews.length){ %>
+            <% for(review of listing.reviews){ %>
+            <div class="card col-5 mb-3 ms-2">
+                <div class="card-body">
+                    <h6 class="card-title">@<%= review.auther && review.auther.username ? review.auther.username : "Anonymous" %></h6>
+                    <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
+                    <p class="card-text"><%= review.comment %></p>
+                </div>
 
-            <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-                <button class="btn btn-sm btn-dark mt-2 mb-2">Delete</button>
-            </form>
-        </div>
+                <form method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                    <button class="btn btn-sm btn-dark mt-2 mb-2">Delete</button>
+                </form>
+            </div>
+            <% } %>
+        <% } else { %>
+            <p class="text-muted">No reviews yet.</p>
         <% } %>   
     </div>
     </div>

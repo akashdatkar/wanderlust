@@ -41,7 +41,7 @@ module.exports.showListing=async(req,res)=>{
 }).populate("owner");
     if(!listing){
         req.flash("error","Listing you requested for does not exit!");
-        res.redirect("/listings");
+        return res.redirect("/listings");
     }
     res.render("listings/show.ejs",{listing});
 }
